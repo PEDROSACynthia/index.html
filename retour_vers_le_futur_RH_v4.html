@@ -1,0 +1,335 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.bttf{background:#0a0a1a;color:#e8f4ff;font-family:'Courier New',monospace;padding:1rem;border-radius:12px;border:2px solid #ff6b00;min-height:200px;}
+.bttf h1{font-size:20px;font-weight:700;color:#ff6b00;letter-spacing:3px;text-align:center;text-transform:uppercase;}
+.bttf h2{font-size:15px;font-weight:700;color:#ff6b00;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.screen{display:none;}.screen.active{display:block;}
+.flux-bar{background:#0d1a2e;border:1px solid #1a3a5c;border-radius:6px;height:10px;margin:10px 0 16px;overflow:hidden;}
+.flux-fill{height:100%;background:#ff6b00;border-radius:6px;transition:width 0.4s;}
+.delorean-bar{display:flex;align-items:center;justify-content:space-between;background:#060f1e;border-radius:6px;padding:6px 12px;margin-bottom:12px;border:1px solid #1a3a5c;}
+.delorean-bar .label{font-size:11px;color:#5a8ab0;letter-spacing:1px;text-transform:uppercase;}
+.delorean-bar .val{font-size:14px;font-weight:700;color:#ff6b00;}
+.qcard{background:#0d1a2e;border:1px solid #1a3a5c;border-radius:8px;padding:1rem;margin-bottom:10px;}
+.qcard .qnum{font-size:11px;color:#5a8ab0;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.qcard .qtxt{font-size:14px;color:#e8f4ff;line-height:1.6;margin-bottom:14px;font-family:'Courier New',monospace;}
+.opts{display:flex;flex-direction:column;gap:7px;}
+.obtn{background:#0a1628;border:1px solid #1a3a5c;border-radius:6px;padding:9px 12px;font-size:13px;color:#b8d4ee;text-align:left;cursor:pointer;font-family:'Courier New',monospace;transition:border-color 0.15s,background 0.15s;}
+.obtn:hover:not(:disabled){background:#0d1f38;border-color:#ff6b00;}
+.obtn.correct{border-color:#39ff14;background:#051a05;color:#39ff14;}
+.obtn.wrong{border-color:#ff3333;background:#1a0505;color:#ff3333;}
+.obtn:disabled{cursor:default;}
+.fb{border-radius:8px;padding:1rem;margin-top:10px;border:1px solid;}
+.fb.good{background:#051a05;border-color:#39ff14;}
+.fb.bad{background:#1a0505;border-color:#ff3333;}
+.fb .fbtitle{font-size:13px;font-weight:700;color:#39ff14;margin-bottom:8px;letter-spacing:1px;}
+.fb.bad .fbtitle{color:#ff3333;}
+.fb .fbrow{font-size:12px;color:#b8d4ee;margin-bottom:6px;line-height:1.6;}
+.fb .fbrow strong{color:#f0c040;}
+.nbtn{display:block;width:100%;margin-top:10px;padding:10px;border-radius:6px;border:1px solid #ff6b00;background:#1a0d00;font-size:13px;cursor:pointer;color:#ff6b00;font-family:'Courier New',monospace;letter-spacing:1px;text-transform:uppercase;transition:background 0.15s;}
+.nbtn:hover{background:#2a1500;}
+.nbtn.primary{background:#ff6b00;color:#0a0a1a;font-weight:700;}
+.nbtn.primary:hover{background:#e05a00;}
+.intro-center{text-align:center;padding:1.5rem 0.5rem;}
+.intro-center p{font-size:13px;color:#b8d4ee;line-height:1.8;max-width:460px;margin:0 auto 14px;}
+.mnav{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;}
+.mpill{background:#0d1a2e;border:1px solid #1a3a5c;border-radius:6px;padding:5px 3px;text-align:center;font-size:11px;color:#5a8ab0;font-family:'Courier New',monospace;}
+.mpill.done{border-color:#39ff14;color:#39ff14;}
+.mpill.active{border-color:#ff6b00;color:#ff6b00;font-weight:700;}
+.tinput{width:100%;background:#0a1628;border:1px solid #1a3a5c;border-radius:6px;padding:9px 12px;font-size:13px;color:#e8f4ff;font-family:'Courier New',monospace;margin-top:8px;text-transform:uppercase;}
+.tinput:focus{outline:none;border-color:#ff6b00;}
+.tf-row{display:flex;gap:10px;margin-top:12px;}
+.tfbtn{flex:1;padding:11px;border-radius:6px;border:1px solid #1a3a5c;background:#0d1a2e;font-size:14px;font-weight:700;cursor:pointer;color:#b8d4ee;font-family:'Courier New',monospace;transition:all 0.15s;}
+.tfbtn:hover:not(:disabled){border-color:#ff6b00;color:#ff6b00;}
+.casebox{background:#060f1e;border:1px solid #1a3a5c;border-radius:6px;padding:0.9rem;margin-bottom:10px;font-size:13px;color:#b8d4ee;line-height:1.8;}
+.casebox strong{color:#f0c040;}
+.finale-wrap{text-align:center;padding:2rem 1rem;}
+.finale-wrap .ftitle{font-size:24px;font-weight:700;color:#ff6b00;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;}
+.finale-wrap p{font-size:13px;color:#b8d4ee;line-height:1.8;margin-bottom:6px;}
+.gepp-box{display:inline-block;font-size:44px;font-weight:700;letter-spacing:12px;color:#39ff14;padding:1.2rem 2rem;border:2px solid #39ff14;border-radius:8px;margin:1.5rem 0;font-family:'Courier New',monospace;}
+.score-line{font-size:16px;font-weight:700;color:#f0c040;margin:10px 0;}
+.bttf-header{border-bottom:1px solid #1a3a5c;padding-bottom:10px;margin-bottom:14px;}
+.ticker{font-size:11px;color:#5a8ab0;letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:4px;}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+.hint-box{background:#060f1e;border:1px solid #1a3a5c;border-radius:6px;padding:10px 12px;margin:10px 0;}
+.hint-label{font-size:11px;color:#5a8ab0;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.hint-word{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.hint-letters{display:flex;gap:3px;align-items:flex-end;}
+.hint-char{display:inline-flex;align-items:center;justify-content:center;width:18px;font-size:14px;font-weight:700;font-family:'Courier New',monospace;}
+.hint-char.revealed{color:#ff6b00;}
+.hint-char.blank{color:#1a3a5c;border-bottom:1px solid #1a3a5c;height:20px;}
+.hint-sep{color:#5a8ab0;font-size:16px;margin:0 2px;}
+.majuscule-warn{font-size:12px;color:#ff6b00;font-weight:700;letter-spacing:1px;margin:6px 0 2px;display:flex;align-items:center;gap:6px;}
+</style>
+
+<h2 class="sr-only">Jeu de revision GEPP — Retour vers le Futur RH — 5 missions pedagogiques sur le Bloc 4 CRH</h2>
+
+<div class="bttf">
+
+<div id="intro" class="screen active">
+  <div class="bttf-header">
+    <div class="ticker">Transmission temporelle — Doc RH — Annee 2040</div>
+    <h1>Retour vers le futur RH</h1>
+    <div class="ticker" style="margin-top:4px;">Sauver les competences — Mission critique</div>
+  </div>
+  <div class="intro-center">
+    <div style="font-size:36px;color:#ff6b00;margin-bottom:12px;"><i class="ti ti-clock-bolt" aria-hidden="true"></i></div>
+    <p style="color:#ff6b00;font-weight:700;font-size:14px;margin-bottom:10px;">ANNEE 2040 — ALERTE ROUGE RH</p>
+    <p>Les entreprises n'ont pas anticipe leurs besoins en competences. Les emplois strategiques sont vacants. Les successeurs sont introuvables. Le chaos RH est total.</p>
+    <p>Le Doc RH vous transmet ce message depuis 2040 : <em style="color:#f0c040;">"Retournez dans le passe. Reconstruisez la GEPP. Sauvez les competences de demain."</em></p>
+    <div style="background:#060f1e;border:1px solid #1a3a5c;border-radius:8px;padding:0.9rem;text-align:left;margin-bottom:1.2rem;">
+      <p style="color:#f0c040;font-weight:700;margin-bottom:8px;font-size:12px;letter-spacing:1px;">COMPOSANTS DE LA MACHINE TEMPORELLE :</p>
+      <p>&#9654; Mission 1 — Reparer les fondamentaux (10 QCM)</p>
+      <p>&#9654; Mission 2 — Identifier les metiers du futur (10 QCM)</p>
+      <p>&#9654; Mission 3 — Retrouver les concepts disparus (10 mots)</p>
+      <p>&#9654; Mission 4 — Le Conseil du Futur (10 Vrai/Faux)</p>
+      <p>&#9654; Mission 5 — Sauver les parcours (5 mini-cas RH)</p>
+    </div>
+    <button class="nbtn primary" onclick="startGame()">Activer le condensateur de flux &gt;&gt;</button>
+  </div>
+</div>
+
+<div id="game" class="screen">
+  <div class="bttf-header">
+    <div class="ticker" id="mission-ticker">Mission 1</div>
+    <div class="mnav" id="mnav"></div>
+    <div class="delorean-bar">
+      <div><div class="label">Energie</div><div class="val" id="nrj">0 / 45</div></div>
+      <div><div class="label">Progression</div><div class="val" id="pct">0%</div></div>
+      <div><div class="label">Vitesse</div><div class="val">88 mph</div></div>
+    </div>
+    <div class="flux-bar"><div class="flux-fill" id="flux" style="width:0%"></div></div>
+  </div>
+  <div id="qa"></div>
+</div>
+
+<div id="finale" class="screen">
+  <div class="finale-wrap">
+    <div class="ftitle">Mission accomplie !</div>
+    <p style="color:#f0c040;font-weight:700;font-size:14px;">ANNEE 2040 — MESSAGE DU DOC RH</p>
+    <p>"Vous avez reussi ! Grace a vos decisions RH, les competences ont ete anticipees."</p>
+    <p>"Les emplois strategiques sont securises. Les parcours professionnels sont construits."</p>
+    <p>"L'employabilite des salaries est preservee. La machine temporelle peut rentrer."</p>
+    <p style="margin-top:12px;color:#b8d4ee;">Vous avez reconstruit :</p>
+    <div class="gepp-box">GEPP</div>
+    <p style="color:#b8d4ee;font-size:12px;letter-spacing:1px;">GESTION DES EMPLOIS ET DES PARCOURS PROFESSIONNELS</p>
+    <div class="score-line" id="fscore"></div>
+    <button class="nbtn primary" style="max-width:320px;margin:1rem auto;" onclick="restart()">Nouvelle mission temporelle &gt;&gt;</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const TICKERS={1:"Mission 1 — Reparer la machine temporelle",2:"Mission 2 — Identifier les metiers du futur",3:"Mission 3 — Retrouver les concepts disparus",4:"Mission 4 — Le Conseil du Futur",5:"Mission 5 — Sauver les parcours professionnels"};
+const INTROS={2:{icon:"ti-telescope",title:"Mission 2 — Metiers du futur",msg:"Premier composant recupere ! Cap sur les emplois strategiques, sensibles et emergents de 2040."},3:{icon:"ti-alphabet-latin",title:"Mission 3 — Concepts disparus",msg:"Excellent ! Les concepts GEPP ont disparu dans le vortex. Retrouvez chaque mot a partir de sa definition. Les indices vous guideront !"},4:{icon:"ti-scale",title:"Mission 4 — Conseil du Futur",msg:"Troisieme composant installe ! Vrai ou Faux — le cadre legal n'a plus de secret pour vous."},5:{icon:"ti-briefcase",title:"Mission 5 — Parcours a sauver",msg:"Presque arrive ! Analysez 5 situations reelles et agissez comme un vrai Charge RH."}};
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shuffleQCM(item){const indexed=item.o.map((text,i)=>({text,correct:i===item.a}));const shuffled=shuffle(indexed);return{q:item.q,o:shuffled.map(x=>x.text),a:shuffled.findIndex(x=>x.correct),n:item.n,d:item.d,g:item.g,t:item.t};}
+
+function buildHint(word){
+  const words=word.split(' ');
+  return words.map(w=>{
+    if(w.length===1)return `<span class="hint-letters"><span class="hint-char revealed">${w}</span></span>`;
+    const chars=w.split('').map((c,i)=>{
+      if(i===0||i===w.length-1)return `<span class="hint-char revealed">${c}</span>`;
+      return `<span class="hint-char blank">_</span>`;
+    }).join('');
+    return `<span class="hint-letters">${chars}</span>`;
+  }).join('<span class="hint-sep">/</span>');
+}
+
+const RAW={
+m1:[
+{q:"Que signifie l'acronyme GEPP ?",o:["Gestion des Emplois et des Parcours Professionnels","Gestion des Effectifs et des Plans de Progression","Guide d'Evaluation des Personnels et Postes","Groupe d'Etudes sur la Performance et le Potentiel"],a:0,n:"GEPP",d:"La GEPP = Gestion des Emplois et des Parcours Professionnels. Demarche qui anticipe les evolutions des metiers et des competences.",g:"Definition centrale du Bloc 4. Tout part de la.",t:"Savoir developper l'acronyme ET expliquer la demarche en une phrase."},
+{q:"La Loi de Cohesion Sociale de 2005 a cree :",o:["La GEPP","La GPEC","Le CPF","L'entretien professionnel"],a:1,n:"2005 — GPEC",d:"La loi de 2005 cree la GPEC (Gestion Previsionnelle des Emplois et des Competences). Mot-cle : ANTICIPATION.",g:"Premiere structuration juridique de ce qui deviendra la GEPP.",t:"2005 = GPEC = ANTICIPATION. Date cle pour l'examen."},
+{q:"Quel mot-cle est associe a la loi de 2014 sur la Formation Professionnelle ?",o:["Anticipation","Parcours professionnel","Co-responsabilite","Employabilite"],a:2,n:"2014 — Loi Formation",d:"La loi 2014 cree l'entretien professionnel. Le salarie devient acteur de son parcours. Mot-cle : CO-RESPONSABILITE.",g:"L'entretien professionnel est un outil cle de la GEPP.",t:"2014 = entretien professionnel + coresponsabilite."},
+{q:"En 2017, les Ordonnances Macron font evoluer la GPEC vers :",o:["GPEC renforcee","GEPP","GPP","GEC"],a:1,n:"2017 — Ordonnances Macron",d:"2017 : passage de la GPEC vers la GEPP, integrant les parcours professionnels, la mobilite et l'employabilite.",g:"La GEPP depasse la logique emplois/competences pour integrer les PARCOURS.",t:"2017 = GEPP. La GPEC disparait. Le mot-cle est PARCOURS."},
+{q:"La loi de 2018 pour la Liberte de choisir son avenir professionnel a cree :",o:["L'entretien professionnel","La GPEC","Le CPF monetise","La People Review"],a:2,n:"2018 — Loi Avenir Professionnel",d:"La loi 2018 cree le CPF monetise et renforce l'EMPLOYABILITE.",g:"Le CPF permet au salarie de financer ses formations, levier concret de la GEPP.",t:"2018 = CPF monetise + EMPLOYABILITE."},
+{q:"Depuis le 26 octobre 2025, a quelle frequence se tient l'entretien de parcours professionnel ?",o:["Tous les 2 ans","Tous les 3 ans","Tous les 4 ans","Tous les 5 ans"],a:2,n:"Reforme 2025 — Art. L6315-1",d:"Depuis octobre 2025 : 1er entretien dans l'annee suivant l'embauche, puis tous les 4 ans. Etat des lieux tous les 8 ans.",g:"Ces obligations structurent le suivi des parcours dans la GEPP.",t:"Sequence : 1 an / 4 ans / 8 ans. L'article L6315-1 est cite a l'examen."},
+{q:"L'article L6321-1 du Code du travail concerne :",o:["La negociation GEPP","L'entretien de parcours","L'obligation de l'employeur : adaptation, employabilite, developpement","Le CPF monetise"],a:2,n:"Article L6321-1",d:"L'article L6321-1 : obligation de l'employeur d'assurer adaptation au poste, maintien de l'employabilite et developpement des competences.",g:"Cet article fonde juridiquement la responsabilite de l'employeur dans la GEPP.",t:"3 obligations : adaptation / employabilite / developpement."},
+{q:"L'article L2242-20 et suivants porte sur :",o:["L'entretien de parcours","La negociation obligatoire sur la GEPP","Le CPF","La mobilite interne"],a:1,n:"Article L2242-20",d:"L'article L2242-20 concerne la negociation obligatoire sur la GEPP dans les entreprises concernees.",g:"Les entreprises ont une obligation de negocier sur la GEPP.",t:"3 articles cles : L2242-20 / L6315-1 / L6321-1."},
+{q:"Quel mot-cle est associe a l'ANI de 2013 ?",o:["Anticipation","Parcours professionnel","Co-responsabilite","Employabilite"],a:1,n:"ANI 2013",d:"L'ANI 2013 renforce la securisation des parcours professionnels. Mot-cle : PARCOURS PROFESSIONNEL.",g:"L'ANI impose a l'entreprise d'accompagner davantage les salaries.",t:"2005=Anticipation / 2013=Parcours / 2014=Coresponsabilite."},
+{q:"La GEPP vise principalement a :",o:["Reduire la masse salariale","Anticiper les evolutions des metiers et competences pour developper l'employabilite","Controler les absences","Optimiser uniquement le recrutement externe"],a:1,n:"Objectifs de la GEPP",d:"La GEPP vise a anticiper les evolutions des metiers et competences afin de developper l'employabilite des salaries et accompagner la strategie.",g:"Definition synthetique a maitriser parfaitement.",t:"4 mots-cles : Anticipation / Competences / Employabilite / Parcours."}
+],
+m2:[
+{q:"Dans un diagnostic GEPP, un emploi 'sensible' est :",o:["Indispensable a la strategie","Menace par les transformations","Un nouveau metier emergent","Reserve aux cadres seniors"],a:1,n:"Emplois sensibles",d:"Emplois sensibles = menaces par les transformations. A surveiller, risque de disparition.",g:"Reperer les emplois sensibles est la premiere etape du diagnostic GEPP.",t:"3 categories : sensibles / strategiques / emergents."},
+{q:"Un emploi 'strategique' dans la GEPP est :",o:["Un emploi qui va disparaitre","Indispensable a la strategie, a securiser et preparer en succession","Un emploi recemment cree","Un emploi de cadre dirigeant uniquement"],a:1,n:"Emplois strategiques",d:"Emplois strategiques = indispensables a la strategie. A securiser et preparer en succession.",g:"Prioriser les emplois strategiques concentre les efforts de GEPP.",t:"Emploi strategique = 'a securiser' + 'a preparer en succession'."},
+{q:"Les emplois 'emergents' designent :",o:["Des emplois en voie de disparition","De nouveaux metiers lies aux transformations, a anticiper","Des emplois temporaires","Des emplois crees par fusion"],a:1,n:"Emplois emergents",d:"Emplois emergents = nouveaux metiers lies aux transformations. A anticiper et developper.",g:"Anticiper les emplois emergents est au coeur de la GEPP.",t:"Ex : data scientist, responsable RSE, expert IA."},
+{q:"La GEPP est justifiee par quel ensemble de transformations ?",o:["Digitalisation uniquement","IA, transition ecologique, departs a la retraite, penuries de competences","Uniquement les departs a la retraite","Uniquement la digitalisation"],a:1,n:"Enjeux de la GEPP",d:"Environnement en transformation permanente : IA, automatisation, transition ecologique, digitalisation, penuries, departs a la retraite.",g:"Tous ces facteurs justifient la GEPP pour anticiper plutot que subir.",t:"Citer plusieurs enjeux montre la comprehension globale."},
+{q:"Une 'competence strategique' selon le support est :",o:["Une competence technique standard","Une competence cle pour l'avenir : IA, developpement durable","Une competence reservee aux managers","Une competence administrative"],a:1,n:"Competences strategiques",d:"Competences strategiques = cles pour l'avenir. Ex : IA, developpement durable.",g:"Ces competences orientent le PDC et la strategie de formation.",t:"4 types : hard skills / soft skills / transferables / strategiques."},
+{q:"La cartographie des emplois est un outil GEPP qui permet :",o:["De calculer la masse salariale","D'avoir une vision globale des metiers et des passerelles de mobilite","D'organiser les plannings","De fixer les objectifs individuels"],a:1,n:"Cartographie des emplois",d:"Cartographie = vision globale des metiers. Associee aux 'aires de mobilite' pour les passerelles.",g:"Outil fondamental pour identifier les mobilites et preparer les parcours.",t:"Cartographie = vision globale. Aires de mobilite = passerelles."},
+{q:"Une competence 'transferable' est :",o:["Utilisee uniquement dans un seul metier","Utilisable sur plusieurs metiers","Transmise entre generations","Une competence informatique uniquement"],a:1,n:"Competences transferables",d:"Competences transferables = utilisables sur plusieurs metiers. Ex : gestion de projet, communication.",g:"Levier de mobilite interne sans repartir de zero.",t:"Competences transferables = levier de mobilite interne."},
+{q:"La People Review est :",o:["Un entretien individuel annuel","Une reunion collective pour identifier talents, potentiels et successions","Un outil de paie","Un tableau de bord RH"],a:1,n:"People Review",d:"People Review = reunion collective. Objectifs : identifier talents, preparer successions, reperer potentiels.",g:"Outil cle de la GEPP pour piloter collectivement les parcours.",t:"People Review = collective. A distinguer du Comite carriere (individuel)."},
+{q:"Le PDC (Plan de Developpement des Competences) est :",o:["Un outil de recrutement uniquement","L'aboutissement operationnel de la GEPP : les besoins traduits en actions de formation","Un document juridique obligatoire uniquement","Un outil d'evaluation annuelle"],a:1,n:"PDC",d:"Le PDC traduit les besoins (ecarts de competences) en actions concretes de formation.",g:"Logique : GEPP → ecarts → PDC → employabilite.",t:"Chaine : GEPP → ecart → PDC → employabilite."},
+{q:"Le diagnostic GEPP analyse notamment :",o:["Uniquement les resultats financiers","Demographie, turnover, absenteisme, pyramide des ages, competences, potentiel","Uniquement les competences techniques","Uniquement les absences"],a:1,n:"Diagnostic GEPP",d:"Diagnostic : donnees quantitatives (effectifs, turnover, absenteisme, pyramide ages) + qualitatives (competences, metiers, potentiel, mobilite).",g:"Premiere etape de la GEPP. Sans diagnostic, pas d'action pertinente.",t:"Distinguez quantitatif (chiffres) et qualitatif (competences, potentiel)."}
+]};
+
+const D={
+m3:[
+{d:"Demarche RH qui vise a anticiper les evolutions des metiers et des competences pour developper l'employabilite des salaries et accompagner la strategie.",a:"GEPP",e:"Dans une entreprise en transformation digitale, le CRH construit une demarche GEPP pour identifier les metiers menaces.",g:"Definition centrale du Bloc 4.",v:"Ne pas confondre avec la GPEC (ancienne appellation). Depuis 2017 : GEPP."},
+{d:"Capacite d'une personne a maintenir ou obtenir un emploi, a s'adapter aux evolutions du marche du travail.",a:"EMPLOYABILITE",e:"Le CRH organise des formations certifiantes pour renforcer l'employabilite des salaries dont les metiers evoluent.",g:"Finalite pour les salaries dans la GEPP.",v:"C'est aussi une obligation de l'employeur (Art. L6321-1)."},
+{d:"Capacite d'un salarie a evoluer vers des responsabilites superieures ou differentes. Distinct de la competence actuelle.",a:"POTENTIEL",e:"Lors d'une People Review, le manager identifie une collaboratrice avec un fort potentiel pour un poste de manager.",g:"Reperer les potentiels prepare les successions dans la GEPP.",v:"Potentiel ≠ performance actuelle."},
+{d:"Changement de poste, de metier, de service ou de lieu geographique. Peut etre verticale, horizontale, fonctionnelle ou geographique.",a:"MOBILITE",e:"Une assistante RH obtient une mobilite horizontale vers un poste de chargee de formation.",g:"Levier central de la GEPP pour developper les competences sans recrutement externe.",v:"4 types : verticale / horizontale / fonctionnelle / geographique."},
+{d:"Document qui traduit les besoins en competences identifies dans la GEPP en actions concretes de formation et de developpement.",a:"PDC",e:"Apres l'analyse des ecarts, le CRH construit le PDC avec formations en data analytics.",g:"Outil operationnel final : GEPP → ecarts → PDC.",v:"PDC = Plan de Developpement des Competences."},
+{d:"Reunion collective RH et managers pour identifier les talents, reperer les potentiels et preparer les successions.",a:"PEOPLE REVIEW",e:"Le DRH organise une People Review avec les directeurs pour preparer les successions des postes cles.",g:"Alimente la GEPP en donnees qualitatives sur les potentiels.",v:"People Review = collectif. Distinct du Comite carriere (individuel)."},
+{d:"Document RH qui decrit les metiers, les competences associees et les niveaux attendus. Sert au recrutement, a la mobilite et a la formation.",a:"REFERENTIEL",e:"Le CRH cree un referentiel des metiers listant les competences requises pour chaque emploi.",g:"L'un des 7 outils de la GEPP. Donne un langage commun.",v:"Referentiel ≠ fiche de poste. Plus global."},
+{d:"Outil GEPP donnant une vision globale de l'ensemble des metiers et des passerelles possibles entre eux.",a:"CARTOGRAPHIE",e:"La cartographie revele que technicien de maintenance est une passerelle vers ingenieur process.",g:"Socle de la gestion previsionnelle.",v:"Associee aux 'aires de mobilite' qui precisent les passerelles."},
+{d:"Combinaison de savoirs, savoir-faire et savoir-etre permettant d'accomplir une activite professionnelle avec efficacite.",a:"COMPETENCE",e:"La competence 'conduite de projet' est transferable : utilisable en RH, informatique et commercial.",g:"Unite de base de la GEPP.",v:"Distinguez : hard skills / soft skills / transferables / strategiques."},
+{d:"Entretien obligatoire distinct de l'entretien annuel, portant sur les perspectives d'evolution, les besoins de formation et le projet professionnel du salarie.",a:"ENTRETIEN DE PARCOURS PROFESSIONNEL",e:"Le CRH organise les entretiens de parcours tous les 4 ans, conformement a l'article L6315-1.",g:"Outil cle de la GEPP pour recueillir les aspirations des salaries.",v:"Entretien de parcours professionnel ≠ entretien annuel (performance)."}
+],
+m4:[
+{q:"L'entretien annuel et l'entretien de parcours professionnel ont le meme objet.",a:false,e:"FAUX. L'entretien annuel porte sur les resultats et la performance. L'entretien de parcours porte sur l'evolution, le projet professionnel et la formation.",r:"Fiche 8 du support.",c:"Annuel = performance (manager). Parcours = employabilite (RH + salarie)."},
+{q:"L'article L6321-1 impose a l'employeur d'assurer l'adaptation du salarie a son poste et le maintien de son employabilite.",a:true,e:"VRAI. Triple obligation : adaptation au poste, maintien de l'employabilite, developpement des competences.",r:"Recapitulatif des articles essentiels.",c:"Cet article est fondateur de la GEPP."},
+{q:"Depuis 2025, l'entretien de parcours professionnel doit avoir lieu tous les 2 ans.",a:false,e:"FAUX. Depuis octobre 2025 : tous les 4 ans. Etat des lieux tous les 8 ans.",r:"Article L6315-1 — Reforme 2025.",c:"Memorisez : 1 an / 4 ans / 8 ans."},
+{q:"La GPEC a ete remplacee par la GEPP suite aux Ordonnances Macron de 2017.",a:true,e:"VRAI. 2017 : passage de GPEC a GEPP, integrant parcours professionnels, mobilite et employabilite.",r:"Fiche 2 — Cadre juridique.",c:"2017 = GEPP. Difference principale : inclusion des parcours professionnels."},
+{q:"Les emplois strategiques sont des emplois menaces par les transformations.",a:false,e:"FAUX. Les emplois SENSIBLES sont menaces. Les emplois STRATEGIQUES sont indispensables a la strategie.",r:"Fiche 4 — Le Diagnostic GEPP.",c:"Sensibles = menaces / Strategiques = indispensables / Emergents = nouveaux."},
+{q:"Le PDC (Plan de Developpement des Competences) est l'aboutissement operationnel de la demarche GEPP.",a:true,e:"VRAI. Le PDC traduit les besoins identifies en actions concretes. Logique : GEPP → ecarts → PDC → employabilite.",r:"Fiche 10 et slide PDC.",c:"PDC = passage de l'analyse a l'action."},
+{q:"La mobilite fonctionnelle correspond a une promotion hierarchique.",a:false,e:"FAUX. La mobilite fonctionnelle = changement d'activite. La mobilite VERTICALE = promotion.",r:"Fiche 7 — Cartographie et mobilite.",c:"4 types : verticale / horizontale / fonctionnelle / geographique."},
+{q:"La People Review est une reunion collective dont un des objectifs est de preparer les successions.",a:true,e:"VRAI. People Review : identifier les talents, preparer les successions, reperer les potentiels.",r:"Fiche 9 — People Review et Comite carriere.",c:"People Review = collective. Comite carriere = individuelle."},
+{q:"La negociation sur la GEPP est encadree par l'article L6315-1 du Code du travail.",a:false,e:"FAUX. La negociation GEPP = L2242-20 et suivants. L6315-1 concerne l'entretien de parcours.",r:"Recapitulatif des articles essentiels.",c:"L2242-20 = negociation / L6315-1 = entretien parcours / L6321-1 = obligation employeur."},
+{q:"L'employabilite est a la fois un objectif de la GEPP pour les salaries et une obligation legale de l'employeur.",a:true,e:"VRAI. Objectif salarie ET obligation legale (Art. L6321-1).",r:"Objectifs GEPP + Art. L6321-1.",c:"L'employabilite est le concept central du Bloc 4 : enjeu humain ET juridique."}
+],
+m5:[
+{t:"Cas 1 — L'entreprise industrielle menacee",ctx:"Une entreprise industrielle de 500 salaries constate que 35 % de ses techniciens de maintenance partent a la retraite dans les 3 prochaines annees. L'automatisation des lignes de production menace une partie des postes d'operateurs. Aucun successeur n'est identifie.",q:"Realisez un diagnostic, identifiez les emplois concernes et proposez les actions GEPP adaptees.",c:{diag:"Risque demographique fort (35 % departs). Operateurs = emplois SENSIBLES (menaces par l'automatisation). Techniciens maintenance = emplois STRATEGIQUES (indispensables, sans successeurs).",ana:"Double risque : perte de competences critiques + transformation technologique. Urgence d'agir avant la crise.",outil:"Cartographie des emplois + People Review + Referentiel des competences",act:"1/ People Review pour identifier les potentiels maintenance. 2/ Tutorat seniors/juniors. 3/ PDC avec formations metiers. 4/ Mobilites horizontales depuis les postes d'operateurs.",res:"Perennisation des competences critiques, reduction du risque de penurie, parcours construits pour les operateurs."}},
+{t:"Cas 2 — La salariee sans projet professionnel",ctx:"Marie, assistante administrative depuis 8 ans, participe a son entretien de parcours professionnel. Elle ne sait pas vers ou evoluer. Elle maitrise Excel, la gestion de plannings et a gere plusieurs projets transverses. Son manager la decrit comme fiable et communicante.",q:"Comment analysez-vous la situation de Marie et quelles actions proposez-vous ?",c:{diag:"Marie dispose de hard skills (Excel, gestion), soft skills (communication, fiabilite) et competences transferables (gestion de projet). Pas de projet professionnel = manque de visibilite.",ana:"Pas d'absence de potentiel mais absence de projection. Le CRH doit co-construire un parcours.",outil:"Entretien de parcours (Art. L6315-1) + Cartographie des emplois + Aires de mobilite",act:"1/ Presenter la cartographie des metiers. 2/ Identifier mobilites horizontales. 3/ Formation certifiante via CPF. 4/ Projet transverse pour tester ses appetences.",res:"Marie dispose d'un projet professionnel formalise. L'entreprise developpe son employabilite (Art. L6321-1)."}},
+{t:"Cas 3 — Le metier qui disparait",ctx:"Une entreprise de transport annonce la digitalisation complete de son service de saisie de donnees d'ici 18 mois. 12 operateurs de saisie seront concernes. L'entreprise veut anticiper plutot que licencier.",q:"Quelle demarche GEPP mettez-vous en place pour accompagner cette transformation ?",c:{diag:"Postes d'operateurs de saisie = emplois SENSIBLES voues a disparaitre. Transformation previsible a 18 mois — delai suffisant.",ana:"Enjeu : eviter des licenciements par anticipation des reconversions. La GEPP prend ici tout son sens.",outil:"Cartographie + Aires de mobilite + Referentiel des competences + PDC",act:"1/ Analyser les competences des 12 operateurs. 2/ Cartographier les mobilites vers d'autres metiers. 3/ PDC individuel pour chaque salarie. 4/ Formation, tutorat, coaching.",res:"Maintien de l'emploi par reconversion interne. Respect obligation legale (Art. L6321-1)."}},
+{t:"Cas 4 — Le talent non detecte",ctx:"Lors d'une People Review, un manager signale Lucas, 28 ans, assistant RH depuis 2 ans. Lucas a pris des initiatives remarquees, gere un projet de refonte du recrutement avec succes et est identifie a fort potentiel.",q:"Comment le CRH structure-t-il le plan d'accompagnement de Lucas ?",c:{diag:"Lucas = profil a haut potentiel. Debut de carriere dans un emploi strategique (RH).",ana:"Enjeu : fideliser et developper ce talent avant qu'il parte vers la concurrence.",outil:"People Review (realisee) + Comite carriere + Plan d'accompagnement",act:"1/ Entretien de parcours pour formaliser son projet. 2/ Plan de developpement 2-3 ans. 3/ Poste cible a horizon 2 ans. 4/ Coaching ou tutorat par un RH senior.",res:"Lucas est fidelise, son potentiel est developpe, l'entreprise prepare un successeur interne."}},
+{t:"Cas 5 — L'entreprise sans GEPP",ctx:"Vous integrez en tant que CRH une PME de 350 salaries qui n'a jamais structure de demarche GEPP. La direction constate des difficultes de recrutement, un turnover eleve et des postes cles occupes par des salaries proches de la retraite sans successeurs.",q:"Comment construisez-vous une demarche GEPP de A a Z ?",c:{diag:"Triple risque : demographique + attractivite (recrutement difficile) + retention (turnover). Pas de visibilite sur les emplois strategiques ni les competences cles.",ana:"L'entreprise subit faute d'anticipation. La GEPP doit etre construite progressivement.",outil:"Tous les outils GEPP : diagnostic, cartographie, referentiel, entretiens de parcours, People Review, PDC",act:"1/ Diagnostic complet. 2/ Identifier emplois sensibles, strategiques, emergents. 3/ Creer referentiel. 4/ Lancer entretiens de parcours. 5/ Organiser premiere People Review. 6/ Construire PDC. 7/ Plans de succession.",res:"Entreprise avec vision claire, anticipant ses besoins et developpant l'employabilite de ses salaries."}}
+]};
+
+let S={m:1,q:0,nrj:0,done:[],answered:false,caseShown:false,shuffledM1:[],shuffledM2:[]};
+
+function buildShuffled(){S.shuffledM1=RAW.m1.map(shuffleQCM);S.shuffledM2=RAW.m2.map(shuffleQCM);}
+function totalQ(){return 45;}
+function doneQ(){let d=0;[1,2,3,4].forEach(m=>{if(S.done.includes(m))d+=10;else if(S.m===m)d+=S.q;});if(S.done.includes(5))d+=5;else if(S.m===5)d+=S.q;return d;}
+
+function startGame(){buildShuffled();document.getElementById('intro').classList.remove('active');document.getElementById('game').classList.add('active');renderNav();renderQ();}
+
+function renderNav(){
+  document.getElementById('mnav').innerHTML=[1,2,3,4,5].map(m=>{let c='mpill';if(S.done.includes(m))c+=' done';else if(m===S.m)c+=' active';return `<div class="${c}">M${m}</div>`;}).join('');
+  document.getElementById('mission-ticker').textContent=TICKERS[S.m];
+  const d=doneQ(),t=totalQ();
+  document.getElementById('nrj').textContent=S.nrj+' / '+t;
+  document.getElementById('pct').textContent=Math.round(d/t*100)+'%';
+  document.getElementById('flux').style.width=Math.round(d/t*100)+'%';
+}
+
+function renderQ(){
+  S.answered=false;S.caseShown=false;
+  if(S.m===1)renderQCM(S.shuffledM1,S.q);
+  else if(S.m===2)renderQCM(S.shuffledM2,S.q);
+  else if(S.m===3)renderMot(D.m3,S.q);
+  else if(S.m===4)renderVF(D.m4,S.q);
+  else renderCase(D.m5,S.q);
+}
+
+function renderQCM(data,q){
+  const it=data[q];
+  document.getElementById('qa').innerHTML=`<div class="qcard"><div class="qnum">Question ${q+1} / ${data.length}</div><p class="qtxt">${it.q}</p><div class="opts">${it.o.map((o,i)=>`<button class="obtn" onclick="ansQCM(${i})"><span style="color:#ff6b00;margin-right:6px;">[${String.fromCharCode(65+i)}]</span> ${o}</button>`).join('')}</div><div id="fb" style="display:none"></div></div>`;
+}
+
+function ansQCM(idx){
+  if(S.answered)return;S.answered=true;
+  const data=S.m===1?S.shuffledM1:S.shuffledM2;
+  const it=data[S.q];
+  const btns=document.querySelectorAll('.obtn');btns.forEach(b=>b.disabled=true);
+  const ok=idx===it.a;if(ok)S.nrj++;
+  btns[it.a].classList.add('correct');if(!ok)btns[idx].classList.add('wrong');
+  showFB(ok,`<div class="fbrow"><strong>NOTION :</strong> ${it.n}</div><div class="fbrow"><strong>DEFINITION :</strong> ${it.d}</div><div class="fbrow"><strong>LIEN GEPP :</strong> ${it.g}</div><div class="fbrow"><strong>ASTUCE EXAMEN :</strong> ${it.t}</div>`);
+  renderNav();
+}
+
+function renderMot(data,q){
+  const it=data[q];
+  const hint=buildHint(it.a);
+  const nbMots=it.a.split(' ').length;
+  const indiceInfo=nbMots>1?`<span style="color:#5a8ab0;font-size:11px;">(${nbMots} mots — separés par un espace)</span>`:'';
+  document.getElementById('qa').innerHTML=`
+    <div class="qcard">
+      <div class="qnum">Mot mystere ${q+1} / ${data.length}</div>
+      <p class="qtxt" style="color:#f0c040;font-style:italic;">"${it.d}"</p>
+      <div class="hint-box">
+        <div class="hint-label"><i class="ti ti-bulb" aria-hidden="true"></i> Indice — premiere et derniere lettre de chaque mot :</div>
+        <div class="hint-word">${hint}</div>
+        <div style="margin-top:6px;">${indiceInfo}</div>
+      </div>
+      <div class="majuscule-warn"><i class="ti ti-alert-triangle" aria-hidden="true"></i> ECRIVEZ EN MAJUSCULES UNIQUEMENT</div>
+      <input class="tinput" id="mi" placeholder="EX : COMPETENCE ou PEOPLE REVIEW" onkeydown="if(event.key==='Enter')checkMot()" autocomplete="off" autocorrect="off" spellcheck="false">
+      <div style="margin-top:8px"><button class="nbtn" style="max-width:220px;" onclick="checkMot()">Valider &gt;&gt;</button></div>
+      <div id="fb" style="display:none;margin-top:10px"></div>
+    </div>`;
+  document.getElementById('mi').focus();
+}
+
+function checkMot(){
+  if(S.answered)return;
+  const raw=document.getElementById('mi').value.trim().toUpperCase();
+  const val=raw.replace(/\s+/g,' ');
+  const it=D.m3[S.q];
+  const ok=val===it.a;
+  S.answered=true;if(ok)S.nrj++;
+  document.getElementById('mi').disabled=true;
+  showFB(ok,`<div class="fbrow"><strong>REPONSE :</strong> ${it.a}</div><div class="fbrow"><strong>DEFINITION :</strong> ${it.d}</div><div class="fbrow"><strong>EXEMPLE :</strong> ${it.e}</div><div class="fbrow"><strong>LIEN GEPP :</strong> ${it.g}</div><div class="fbrow"><strong>VIGILANCE :</strong> ${it.v}</div>`);
+  renderNav();
+}
+
+function renderVF(data,q){
+  const it=data[q];
+  document.getElementById('qa').innerHTML=`<div class="qcard"><div class="qnum">Affirmation ${q+1} / ${data.length}</div><p class="qtxt">${it.q}</p><div class="tf-row"><button class="tfbtn" onclick="ansVF(true)" style="color:#39ff14;border-color:#39ff14;">[V] VRAI</button><button class="tfbtn" onclick="ansVF(false)" style="color:#ff3333;border-color:#ff3333;">[F] FAUX</button></div><div id="fb" style="display:none;margin-top:10px"></div></div>`;
+}
+
+function ansVF(ans){
+  if(S.answered)return;S.answered=true;
+  const it=D.m4[S.q];const ok=ans===it.a;if(ok)S.nrj++;
+  document.querySelectorAll('.tfbtn').forEach(b=>b.disabled=true);
+  showFB(ok,`<div class="fbrow"><strong>C'EST ${it.a?'VRAI':'FAUX'}</strong> — ${it.e}</div><div class="fbrow"><strong>REFERENCE :</strong> ${it.r}</div><div class="fbrow"><strong>POINT CLE :</strong> ${it.c}</div>`);
+  renderNav();
+}
+
+function renderCase(data,q){
+  const it=data[q];
+  document.getElementById('qa').innerHTML=`<div class="qcard"><div class="qnum">Mini-cas ${q+1} / 5</div><h2 style="color:#f0c040;font-size:14px;margin-bottom:10px;">${it.t}</h2><div class="casebox"><strong>SITUATION :</strong> ${it.ctx}</div><p class="qtxt" style="margin-bottom:12px;"><strong style="color:#ff6b00;">MISSION :</strong> ${it.q}</p><p style="font-size:12px;color:#5a8ab0;margin-bottom:10px;letter-spacing:1px;">REFLECHISSEZ, PUIS DECOUVREZ LE CORRIGE CRH :</p><button class="nbtn" onclick="revealCase()">Afficher la correction du Doc RH &gt;&gt;</button><div id="fb" style="display:none;margin-top:10px"></div></div>`;
+}
+
+function revealCase(){
+  if(S.caseShown)return;S.caseShown=true;S.answered=true;S.nrj++;
+  const c=D.m5[S.q].c;
+  showFB(true,`<div class="fbrow"><strong>DIAGNOSTIC :</strong> ${c.diag}</div><div class="fbrow"><strong>ANALYSE :</strong> ${c.ana}</div><div class="fbrow"><strong>OUTIL GEPP :</strong> ${c.outil}</div><div class="fbrow"><strong>ACTION RH :</strong> ${c.act}</div><div class="fbrow"><strong>RESULTAT ATTENDU :</strong> ${c.res}</div>`,true);
+  renderNav();
+}
+
+function showFB(ok,html,noTitle){
+  const fb=document.getElementById('fb');fb.style.display='block';
+  fb.className='fb '+(ok?'good':'bad');
+  const title=noTitle?'':`<div class="fbtitle">${ok?'>> CORRECT — COMPOSANT RECUPERE !':'>> ERREUR — ANALYSONS ENSEMBLE'}</div>`;
+  fb.innerHTML=title+html+`<button class="nbtn" style="margin-top:10px;" onclick="nextQ()">Continuer la mission &gt;&gt;</button>`;
+}
+
+function nextQ(){
+  const max=S.m<=4?10:5;
+  if(S.q<max-1){S.q++;renderQ();}
+  else{S.done.push(S.m);if(S.m<5)showMissionIntro(S.m+1);else showFinale();}
+}
+
+function showMissionIntro(next){
+  S.m=next;S.q=0;
+  const info=INTROS[next];
+  document.getElementById('qa').innerHTML=`<div style="text-align:center;padding:1.5rem 0.5rem;"><div style="font-size:32px;color:#ff6b00;margin-bottom:12px;"><i class="ti ${info.icon}" aria-hidden="true"></i></div><h2 style="color:#ff6b00;font-size:15px;letter-spacing:2px;margin-bottom:12px;">${info.title}</h2><p style="font-size:13px;color:#b8d4ee;line-height:1.8;max-width:460px;margin:0 auto 16px;">${info.msg}</p><button class="nbtn primary" onclick="launchMission(${next})">Activer le composant ${next} &gt;&gt;</button></div>`;
+  renderNav();
+}
+
+function launchMission(m){S.m=m;S.q=0;renderQ();renderNav();}
+
+function showFinale(){
+  document.getElementById('game').classList.remove('active');
+  document.getElementById('finale').classList.add('active');
+  document.getElementById('fscore').textContent='Score : '+S.nrj+' / '+totalQ()+' bonnes reponses';
+}
+
+function restart(){
+  S={m:1,q:0,nrj:0,done:[],answered:false,caseShown:false,shuffledM1:[],shuffledM2:[]};
+  document.getElementById('finale').classList.remove('active');
+  document.getElementById('intro').classList.add('active');
+}
+</script>
